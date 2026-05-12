@@ -362,6 +362,7 @@
             right: 13px;
             top: 50%;
             transform: translateY(-50%);
+            pointer-events: auto !important;
             cursor: pointer;
             left: auto !important;
         }
@@ -663,13 +664,14 @@
 
     // ── Toggle password visibility ──
     (function () {
-        const toggle = document.getElementById('togglePwd');
-        const pwd    = document.getElementById('password');
-        toggle.addEventListener('click', () => {
-            const show = pwd.type === 'password';
-            pwd.type = show ? 'text' : 'password';
-            toggle.style.stroke = show ? 'var(--amber)' : 'var(--muted)';
-        });
+    const toggle = document.getElementById('togglePwd');
+    const pwd    = document.getElementById('password');
+    if (!toggle || !pwd) return;
+    toggle.addEventListener('click', () => {
+        const show = pwd.type === 'password';
+        pwd.type = show ? 'text' : 'password';
+        toggle.style.stroke = show ? 'var(--amber)' : 'var(--muted)';
+    });
     })();
 </script>
 

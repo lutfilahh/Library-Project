@@ -1,7 +1,29 @@
 <?php
 
+use App\Http\Controllers\Auth\AuthController;
 use Illuminate\Support\Facades\Route;
 
+// ── Halaman publik ──
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->route('login');
+});
+
+// ── Auth 
+Route::middleware('guest')->group(function () {
+    //login
+    Route::get('/login',  [AuthController::class, 'index'])->name('login');
+    Route::post('/login', [AuthController::class, 'login'])->name('login.post');
+});
+
+// ── Logout ──
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+// ── Area Admin 
+Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/dashboard', fn() => view('admin.dashboard'))->name('dashboard');
+});
+
+// ── Area Member ──
+Route::middleware('auth')->prefix('member')->name('member.')->group(function () {
+    Route::get('/dashboard', fn() => view('member.dashboard'))->name('dashboard');
 });

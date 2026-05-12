@@ -17,9 +17,9 @@ return new class extends Migration
         Schema::create('pinjams', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(User::class);
-            $table->date('tgl_pinjam')->nullable();
-            $table->date('tgl_kembali')->nullable();
-            $table->enum('status',['pinjam','kembali'])->nullable();
+            $table->date('tgl_pinjam');
+            $table->date('tgl_kembali');
+            $table->enum('status',['pinjam','kembali']);
             $table->foreignIdFor(Buku::class);
             $table->timestamps();
             $table->softDeletes();

@@ -15,8 +15,8 @@ return new class extends Migration
         Schema::create('pengembalians', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(Pinjam::class);
-            $table->date('tgl_kembali')->nullable();
-            $table->string('denda')->nullable();
+            $table->date('tgl_kembali');
+            $table->string('denda');
             $table->timestamps();
             $table->softDeletes();
         });

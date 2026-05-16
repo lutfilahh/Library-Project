@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Peminjaman — Admin Perpustakaan</title>
+    <title>Member — Admin Perpustakaan</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
     <style>
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -28,7 +28,7 @@
 
         /* ─── SIDEBAR ─── */
         .sidebar { width:var(--sidebar-w); min-height:100vh; background:var(--surface); position:fixed; top:0; left:0; bottom:0; border-right:1px solid var(--border); z-index:100; display:flex; flex-direction:column; }
-        .sidebar::before { content:''; position:absolute; inset:0; background: url("data:image/svg+xml,%3Csvg width='60' height='60' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='30' cy='30' r='1' fill='%23d4a843' opacity='0.04'/%3E%3C/svg%3E") repeat; pointer-events:none; }
+        .sidebar::before { content:''; position:absolute; inset:0; background:url("data:image/svg+xml,%3Csvg width='60' height='60' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='30' cy='30' r='1' fill='%23d4a843' opacity='0.04'/%3E%3C/svg%3E") repeat; pointer-events:none; }
         .brand { padding:22px 20px; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:12px; }
         .brand-logo { width:38px; height:38px; background:linear-gradient(135deg,var(--amber),var(--gold)); border-radius:8px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
         .brand-logo svg { width:20px; height:20px; fill:none; stroke:#1c1a14; stroke-width:2; }
@@ -53,7 +53,6 @@
         .page-heading h1 { font-family:'Playfair Display',serif; font-size:17px; font-weight:600; color:var(--gold); }
         .page-heading p  { font-size:11px; color:var(--text-dim); margin-top:1px; font-weight:300; }
 
-        /* ─── BUTTONS ─── */
         .btn { display:inline-flex; align-items:center; gap:7px; padding:0 16px; height:36px; border-radius:6px; font-family:'Lato',sans-serif; font-size:12px; font-weight:700; letter-spacing:0.5px; cursor:pointer; border:none; text-decoration:none; transition:all 0.2s; white-space:nowrap; }
         .btn svg { width:13px; height:13px; fill:none; stroke:currentColor; stroke-width:2; }
         .btn-gold   { background:linear-gradient(135deg,var(--brown),var(--amber)); color:var(--cream); }
@@ -62,15 +61,14 @@
         .btn-outline:hover { background:rgba(212,168,67,0.08); }
         .btn-danger { background:rgba(139,58,42,0.18); color:#f4a49a; border:1px solid rgba(139,58,42,0.3); }
         .btn-danger:hover { background:rgba(139,58,42,0.32); }
-        .btn-green  { background:rgba(45,106,79,0.18); color:#52b788; border:1px solid rgba(45,106,79,0.3); }
-        .btn-green:hover { background:rgba(45,106,79,0.32); }
+        .btn-edit   { background:rgba(184,130,26,0.12); color:var(--gold); border:1px solid rgba(212,168,67,0.2); }
+        .btn-edit:hover { background:rgba(184,130,26,0.24); }
         .btn-sm     { height:30px; padding:0 10px; font-size:11px; }
 
-        /* ─── CONTENT ─── */
         .content { padding:26px 28px; flex:1; }
 
         /* Stats */
-        .stat-strip { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:22px; }
+        .stat-strip { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:22px; }
         .stat-box { background:var(--surface2); border:1px solid var(--border); border-radius:8px; padding:16px 18px; display:flex; align-items:center; gap:14px; transition:border-color 0.2s; }
         .stat-box:hover { border-color:var(--border2); }
         .stat-icon { width:36px; height:36px; border-radius:8px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
@@ -78,26 +76,21 @@
         .si-gold  { background:rgba(212,168,67,0.1);  } .si-gold  svg { stroke:var(--gold); }
         .si-green { background:rgba(45,106,79,0.12);  } .si-green svg { stroke:#52b788; }
         .si-rust  { background:rgba(139,58,42,0.12);  } .si-rust  svg { stroke:#f4a49a; }
-        .si-amber { background:rgba(184,130,26,0.12); } .si-amber svg { stroke:var(--amber); }
         .stat-info .num { font-family:'Playfair Display',serif; font-size:26px; font-weight:700; color:var(--cream); line-height:1; }
         .stat-info .lbl { font-size:11px; color:var(--text-dim); margin-top:3px; }
 
-        /* Alert */
         .alert { padding:11px 16px; border-radius:6px; margin-bottom:18px; font-size:13px; display:flex; align-items:center; gap:10px; animation:slideDown 0.3s ease; }
         @keyframes slideDown { from{opacity:0;transform:translateY(-8px)} to{opacity:1;transform:none} }
         .alert-success { background:rgba(45,106,79,0.15); border:1px solid rgba(45,106,79,0.3); color:#52b788; }
         .alert-error   { background:rgba(139,58,42,0.15); border:1px solid rgba(139,58,42,0.3); color:#f4a49a; }
 
-        /* Toolbar */
         .toolbar { display:flex; align-items:center; gap:10px; margin-bottom:16px; flex-wrap:wrap; }
         .search-box { display:flex; align-items:center; background:var(--surface2); border:1px solid var(--border); border-radius:6px; padding:0 12px; gap:8px; height:38px; flex:1; min-width:180px; transition:border-color 0.2s; }
         .search-box:focus-within { border-color:var(--amber); }
         .search-box svg { width:14px; height:14px; stroke:var(--text-dim); fill:none; stroke-width:2; flex-shrink:0; }
         .search-box input { background:none; border:none; outline:none; font-family:'Lato',sans-serif; font-size:13px; color:var(--text); width:100%; }
         .search-box input::placeholder { color:var(--text-dim); }
-        .filter-select { background:var(--surface2); border:1px solid var(--border); border-radius:6px; padding:0 12px; height:38px; color:var(--text); font-family:'Lato',sans-serif; font-size:13px; outline:none; cursor:pointer; }
 
-        /* Table card */
         .card { background:var(--surface2); border:1px solid var(--border); border-radius:10px; overflow:hidden; }
         .card-head { padding:14px 20px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; }
         .card-head h3 { font-family:'Playfair Display',serif; font-size:15px; color:var(--gold); }
@@ -112,16 +105,18 @@
         .no-row { text-align:center; padding:48px; color:var(--text-dim); font-size:14px; }
         .pill { display:inline-block; font-size:10px; font-weight:700; padding:3px 9px; border-radius:20px; }
         .pill-ok     { background:rgba(45,106,79,0.15);  color:#52b788; }
-        .pill-warn   { background:rgba(184,130,26,0.15); color:var(--gold); }
         .pill-danger { background:rgba(139,58,42,0.15);  color:#f4a49a; }
-        .pill-done   { background:rgba(100,100,100,0.15);color:var(--text-dim); }
-        .actions { display:flex; gap:6px; flex-wrap:wrap; }
+        .actions { display:flex; gap:6px; }
         .pagi-wrap { padding:14px 20px; border-top:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px; }
         .pagi-wrap p { font-size:12px; color:var(--text-dim); }
         .pagination { display:flex; gap:3px; list-style:none; }
         .pagination li span,.pagination li a { display:flex; align-items:center; justify-content:center; min-width:30px; height:30px; padding:0 8px; border-radius:5px; font-size:12px; text-decoration:none; color:var(--text-dim); background:var(--surface3); border:1px solid var(--border); transition:all 0.2s; }
         .pagination li a:hover { border-color:var(--border2); color:var(--gold); }
         .pagination li.active span { background:rgba(212,168,67,0.15); border-color:var(--border2); color:var(--gold); font-weight:700; }
+
+        /* Avatar */
+        .avatar { width:34px; height:34px; border-radius:50%; background:linear-gradient(135deg,var(--brown),var(--amber)); display:flex; align-items:center; justify-content:center; font-family:'Playfair Display',serif; font-size:13px; font-weight:700; color:var(--cream); flex-shrink:0; }
+        .member-cell { display:flex; align-items:center; gap:10px; }
 
         /* ─── MODAL ─── */
         .modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.8); backdrop-filter:blur(4px); z-index:200; display:none; align-items:center; justify-content:center; }
@@ -143,16 +138,14 @@
         .field input::placeholder { color:var(--text-dim); }
         .field select option { background:var(--surface2); }
         .field input:focus,.field select:focus { border-color:var(--amber); box-shadow:0 0 0 3px rgba(184,130,26,0.1); }
-        .field-hint { font-size:11px; color:var(--text-dim); margin-top:4px; }
         .field-error { font-size:11px; color:#f4a49a; margin-top:4px; }
+        .field-hint  { font-size:11px; color:var(--text-dim); margin-top:4px; }
 
-        /* Konfirmasi return */
-        .confirm-body { padding:24px; text-align:center; }
-        .confirm-icon { font-size:44px; margin-bottom:14px; }
-        .confirm-body h3 { font-family:'Playfair Display',serif; font-size:18px; color:var(--cream); margin-bottom:8px; }
-        .confirm-body p { font-size:13px; color:var(--text-dim); line-height:1.6; }
-        .denda-info { background:rgba(139,58,42,0.12); border:1px solid rgba(139,58,42,0.25); border-radius:6px; padding:10px 14px; margin:14px 0; font-size:13px; color:#f4a49a; }
-        .confirm-footer { padding:0 24px 24px; display:flex; gap:8px; justify-content:center; }
+        .delete-body { padding:24px; text-align:center; }
+        .delete-body .icon { font-size:44px; margin-bottom:14px; }
+        .delete-body h3 { font-family:'Playfair Display',serif; font-size:18px; color:var(--cream); margin-bottom:8px; }
+        .delete-body p { font-size:13px; color:var(--text-dim); line-height:1.6; }
+        .delete-footer { padding:0 24px 24px; display:flex; gap:8px; justify-content:center; }
     </style>
 </head>
 <body>
@@ -174,11 +167,11 @@
             <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
             Dashboard Buku
         </a>
-        <a href="{{ route('admin.pinjam.index') }}" class="nav-link active">
+        <a href="{{ route('admin.pinjam.index') }}" class="nav-link">
             <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
             Peminjaman
         </a>
-        <a href="{{ route('admin.member.index') }}" class="nav-link">
+        <a href="{{ route('admin.member.index') }}" class="nav-link active">
             <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
             Member
         </a>
@@ -198,18 +191,17 @@
 <div class="main">
     <header class="topbar">
         <div class="page-heading">
-            <h1>Data Peminjaman</h1>
-            <p>Catat dan kelola peminjaman buku member</p>
+            <h1>Data Member</h1>
+            <p>Kelola member perpustakaan</p>
         </div>
         <button class="btn btn-gold" onclick="openModal('modalTambah')">
             <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-            Catat Peminjaman
+            Tambah Member
         </button>
     </header>
 
     <div class="content">
 
-        {{-- Alert --}}
         @if(session('success'))
         <div class="alert alert-success">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
@@ -227,57 +219,43 @@
         <div class="stat-strip">
             <div class="stat-box">
                 <div class="stat-icon si-gold">
-                    <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+                    <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
                 </div>
                 <div class="stat-info">
-                    <div class="num">{{ $totalPinjam }}</div>
-                    <div class="lbl">Total Peminjaman</div>
-                </div>
-            </div>
-            <div class="stat-box">
-                <div class="stat-icon si-amber">
-                    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                </div>
-                <div class="stat-info">
-                    <div class="num">{{ $totalAktif }}</div>
-                    <div class="lbl">Sedang Dipinjam</div>
+                    <div class="num">{{ $totalMember }}</div>
+                    <div class="lbl">Total Member</div>
                 </div>
             </div>
             <div class="stat-box">
                 <div class="stat-icon si-green">
-                    <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+                    <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
                 </div>
                 <div class="stat-info">
-                    <div class="num">{{ $totalKembali }}</div>
-                    <div class="lbl">Sudah Dikembalikan</div>
+                    <div class="num">{{ $totalAktif }}</div>
+                    <div class="lbl">Sedang Meminjam</div>
                 </div>
             </div>
             <div class="stat-box">
                 <div class="stat-icon si-rust">
-                    <svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                    <svg viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
                 </div>
                 <div class="stat-info">
-                    <div class="num">{{ $totalTerlambat }}</div>
-                    <div class="lbl">Terlambat</div>
+                    <div class="num">{{ $totalDenda }}</div>
+                    <div class="lbl">Ada Denda Aktif</div>
                 </div>
             </div>
         </div>
 
         {{-- Toolbar --}}
-        <form method="GET" action="{{ route('admin.pinjam.index') }}">
+        <form method="GET" action="{{ route('admin.member.index') }}">
             <div class="toolbar">
                 <div class="search-box">
                     <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari nama member atau judul buku...">
+                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari nama, email, telepon...">
                 </div>
-                <select name="status" class="filter-select" onchange="this.form.submit()">
-                    <option value="">Semua Status</option>
-                    <option value="pinjam"  {{ request('status')=='pinjam'  ? 'selected':'' }}>Sedang Dipinjam</option>
-                    <option value="kembali" {{ request('status')=='kembali' ? 'selected':'' }}>Sudah Kembali</option>
-                </select>
                 <button type="submit" class="btn btn-outline">Cari</button>
-                @if(request('search') || request('status'))
-                <a href="{{ route('admin.pinjam.index') }}" class="btn btn-outline">Reset</a>
+                @if(request('search'))
+                <a href="{{ route('admin.member.index') }}" class="btn btn-outline">Reset</a>
                 @endif
             </div>
         </form>
@@ -285,196 +263,189 @@
         {{-- Table --}}
         <div class="card">
             <div class="card-head">
-                <h3>Daftar Peminjaman</h3>
-                <span>{{ $pinjam->firstItem() }}–{{ $pinjam->lastItem() }} dari {{ $pinjam->total() }}</span>
+                <h3>Daftar Member</h3>
+                <span>{{ $member->firstItem() }}–{{ $member->lastItem() }} dari {{ $member->total() }}</span>
             </div>
             <table>
                 <thead>
                     <tr>
                         <th>No</th>
                         <th>Member</th>
-                        <th>Judul Buku</th>
-                        <th>Tgl Pinjam</th>
-                        <th>Batas Kembali</th>
-                        <th>Status</th>
-                        <th>Denda</th>
+                        <th>Telepon</th>
+                        <th>Alamat</th>
+                        <th>Status Pinjam</th>
                         <th>Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @forelse($pinjam as $i => $p)
-                    @php
-                        $terlambat = $p->status === 'pinjam' && now()->gt($p->tgl_kembali);
-                        $hariTerlambat = $terlambat ? now()->diffInDays($p->tgl_kembali) : 0;
-                        $denda = $hariTerlambat * 2000;
-                    @endphp
+                    @forelse($member as $i => $a)
                     <tr>
                         <td style="color:var(--text-dim);width:40px">
-                            {{ ($pinjam->currentPage()-1)*$pinjam->perPage()+$i+1 }}
+                            {{ ($member->currentPage()-1)*$member->perPage()+$i+1 }}
                         </td>
                         <td>
-                            <div class="cell-title">{{ $p->user->nama ?? '-' }}</div>
-                            <div class="cell-sub">{{ $p->user->email ?? '' }}</div>
+                            <div class="member-cell">
+                                <div class="avatar">{{ strtoupper(substr($a->nama,0,1)) }}</div>
+                                <div>
+                                    <div class="cell-title">{{ $a->nama }}</div>
+                                    <div class="cell-sub">{{ $a->email }}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td style="font-size:12px">{{ $a->telepon ?? '—' }}</td>
+                        <td style="font-size:12px;color:var(--text-dim);max-width:160px">
+                            {{ Str::limit($a->alamat, 40) ?? '—' }}
                         </td>
                         <td>
-                            <div class="cell-title">{{ $p->buku->judul ?? '-' }}</div>
-                            <div class="cell-sub">{{ $p->buku->penulis ?? '' }}</div>
-                        </td>
-                        <td style="font-size:12px">
-                            {{ \Carbon\Carbon::parse($p->tgl_pinjam)->format('d M Y') }}
-                        </td>
-                        <td style="font-size:12px">
-                            <span style="color:{{ $terlambat ? '#f4a49a' : 'var(--text)' }}">
-                                {{ \Carbon\Carbon::parse($p->tgl_kembali)->format('d M Y') }}
-                            </span>
-                            @if($terlambat)
-                                <div style="font-size:10px;color:#f4a49a;margin-top:2px">+{{ $hariTerlambat }} hari</div>
-                            @endif
-                        </td>
-                        <td>
-                            @if($p->status === 'kembali')
-                                <span class="pill pill-done">Kembali</span>
-                            @elseif($terlambat)
-                                <span class="pill pill-danger">Terlambat</span>
+                            @php $aktif = $a->pinjam()->where('status','pinjam')->count(); @endphp
+                            @if($aktif > 0)
+                                <span class="pill pill-ok">{{ $aktif }} buku</span>
                             @else
-                                <span class="pill pill-ok">Aktif</span>
-                            @endif
-                        </td>
-                        <td style="font-size:12px">
-                            @if($p->status === 'kembali' && $p->pengembalian)
-                                @if($p->pengembalian->denda > 0)
-                                    <span style="color:#f4a49a;font-weight:700">
-                                        Rp {{ number_format($p->pengembalian->denda,0,',','.') }}
-                                    </span>
-                                @else
-                                    <span style="color:var(--text-dim)">—</span>
-                                @endif
-                            @elseif($terlambat)
-                                <span style="color:#f4a49a">
-                                    Rp {{ number_format($denda,0,',','.') }}
-                                </span>
-                            @else
-                                <span style="color:var(--text-dim)">—</span>
+                                <span class="pill pill-danger" style="background:rgba(100,100,100,0.12);color:var(--text-dim)">Tidak ada</span>
                             @endif
                         </td>
                         <td>
                             <div class="actions">
-                                @if($p->status === 'pinjam')
-                                <button class="btn btn-green btn-sm"onclick="openKembali({{ json_encode($p->id) }}, {{ json_encode($p->user->nama ?? '') }}, {{ json_encode($p->buku->judul ?? '') }}, {{ $terlambat ? $hariTerlambat : 0 }}, {{ $denda }})">
-                                    <svg viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.08"/></svg>
-                                    Kembalikan
+                                <button class="btn btn-edit btn-sm"
+                                    onclick="openEdit({
+                                        id:'{{ $a->id }}',
+                                        nama:'{{ addslashes($a->nama) }}',
+                                        email:'{{ $a->email }}',
+                                        telepon:'{{ $a->telepon }}',
+                                        alamat:'{{ addslashes($a->alamat) }}'
+                                    })">
+                                    <svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                                    Edit
                                 </button>
-                                @else
-                                <span style="font-size:11px;color:var(--text-dim)">
-                                    {{ $p->pengembalian ? \Carbon\Carbon::parse($p->pengembalian->tgl_kembali)->format('d M Y') : '-' }}
-                                </span>
-                                @endif
-
-                                <form method="POST" action="{{ route('admin.pinjam.destroy', $p->id) }}"
-                                      onsubmit="return confirm('Hapus data peminjaman ini?')">
-                                    @csrf @method('DELETE')
-                                    <button type="submit" class="btn btn-danger btn-sm">
-                                        <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M9 6V4h6v2"/></svg>
-                                        Hapus
-                                    </button>
-                                </form>
+                                <button class="btn btn-danger btn-sm"
+                                    onclick="openDelete('{{ $a->id }}','{{ addslashes($a->nama) }}')">
+                                    <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M9 6V4h6v2"/></svg>
+                                    Hapus
+                                </button>
                             </div>
                         </td>
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="8" class="no-row">📋 Belum ada data peminjaman.</td>
+                        <td colspan="6" class="no-row">👤 Belum ada member terdaftar.</td>
                     </tr>
                     @endforelse
                 </tbody>
             </table>
             <div class="pagi-wrap">
-                <p>Menampilkan {{ $pinjam->firstItem() ?? 0 }}–{{ $pinjam->lastItem() ?? 0 }} dari {{ $pinjam->total() }} data</p>
-                {{ $pinjam->appends(request()->query())->links() }}
+                <p>Menampilkan {{ $member->firstItem() ?? 0 }}–{{ $member->lastItem() ?? 0 }} dari {{ $member->total() }} member</p>
+                {{ $member->appends(request()->query())->links() }}
             </div>
         </div>
 
     </div>
 </div>
 
-{{-- ═══ MODAL CATAT PINJAM ═══ --}}
+{{-- ═══ MODAL TAMBAH ═══ --}}
 <div class="modal-overlay" id="modalTambah">
     <div class="modal">
         <div class="modal-header">
-            <h2>Catat Peminjaman Baru</h2>
+            <h2>Tambah Member Baru</h2>
             <button class="modal-close" onclick="closeModal('modalTambah')">×</button>
         </div>
-        <form method="POST" action="{{ route('admin.pinjam.store') }}">
+        <form method="POST" action="{{ route('admin.member.store') }}">
             @csrf
             <div class="modal-body">
                 <div class="form-grid">
                     <div class="field full">
-                        <label>Member</label>
-                        <select name="user_id" required>
-                            <option value="">-- Pilih Member --</option>
-                            @foreach($members as $m)
-                            <option value="{{ $m->id }}" {{ old('user_id')==$m->id ? 'selected':'' }}>
-                                {{ $m->nama }} — {{ $m->email }}
-                            </option>
-                            @endforeach
-                        </select>
-                        @error('user_id')<p class="field-error">{{ $message }}</p>@enderror
+                        <label>Nama Lengkap</label>
+                        <input type="text" name="nama" value="{{ old('nama') }}" placeholder="Nama member" required>
+                        @error('nama')<p class="field-error">{{ $message }}</p>@enderror
+                    </div>
+                    <div class="field">
+                        <label>Email</label>
+                        <input type="email" name="email" value="{{ old('email') }}" placeholder="email@contoh.com" required>
+                        @error('email')<p class="field-error">{{ $message }}</p>@enderror
+                    </div>
+                    <div class="field">
+                        <label>No. Telepon</label>
+                        <input type="text" name="telepon" value="{{ old('telepon') }}" placeholder="08xx-xxxx-xxxx">
+                        @error('telepon')<p class="field-error">{{ $message }}</p>@enderror
                     </div>
                     <div class="field full">
-                        <label>Buku</label>
-                        <select name="buku_id" required>
-                            <option value="">-- Pilih Buku --</option>
-                            @foreach($buku as $b)
-                            <option value="{{ $b->id }}" {{ old('buku_id')==$b->id ? 'selected':'' }}>
-                                {{ $b->judul }} (tersedia: {{ $b->jumlah }})
-                            </option>
-                            @endforeach
-                        </select>
-                        @error('buku_id')<p class="field-error">{{ $message }}</p>@enderror
+                        <label>Alamat</label>
+                        <input type="text" name="alamat" value="{{ old('alamat') }}" placeholder="Alamat lengkap">
+                        @error('alamat')<p class="field-error">{{ $message }}</p>@enderror
                     </div>
                     <div class="field">
-                        <label>Tanggal Pinjam</label>
-                        <input type="date" name="tgl_pinjam" value="{{ old('tgl_pinjam', date('Y-m-d')) }}" required>
-                        @error('tgl_pinjam')<p class="field-error">{{ $message }}</p>@enderror
+                        <label>Password</label>
+                        <input type="password" name="password" placeholder="Min. 8 karakter" required>
+                        @error('password')<p class="field-error">{{ $message }}</p>@enderror
                     </div>
                     <div class="field">
-                        <label>Batas Kembali</label>
-                        <input type="date" name="tgl_kembali" value="{{ old('tgl_kembali', date('Y-m-d', strtotime('+7 days'))) }}" required>
-                        <p class="field-hint">Default 7 hari · Denda Rp 2.000/hari</p>
-                        @error('tgl_kembali')<p class="field-error">{{ $message }}</p>@enderror
+                        <label>Konfirmasi Password</label>
+                        <input type="password" name="password_confirmation" placeholder="Ulangi password" required>
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-outline" onclick="closeModal('modalTambah')">Batal</button>
-                <button type="submit" class="btn btn-gold">Simpan Peminjaman</button>
+                <button type="submit" class="btn btn-gold">Simpan Member</button>
             </div>
         </form>
     </div>
 </div>
 
-{{-- ═══ MODAL KEMBALIKAN ═══ --}}
-<div class="modal-overlay" id="modalKembali">
-    <div class="modal" style="width:420px">
-        <div class="confirm-body">
-            <div class="confirm-icon">📖</div>
-            <h3>Konfirmasi Pengembalian</h3>
-            <p>
-                <strong id="ret-member" style="color:var(--gold)"></strong><br>
-                mengembalikan buku <strong id="ret-buku" style="color:var(--cream)"></strong>
-            </p>
-            <div class="denda-info" id="ret-denda-box" style="display:none">
-                ⚠️ Terlambat <strong id="ret-hari"></strong> hari —
-                Denda: <strong id="ret-denda"></strong>
-            </div>
-            <p id="ret-nodenda" style="margin-top:12px;color:#52b788;font-size:13px"></p>
+{{-- ═══ MODAL EDIT ═══ --}}
+<div class="modal-overlay" id="modalEdit">
+    <div class="modal">
+        <div class="modal-header">
+            <h2>Edit Data Member</h2>
+            <button class="modal-close" onclick="closeModal('modalEdit')">×</button>
         </div>
-        <div class="confirm-footer">
-            <button class="btn btn-outline" onclick="closeModal('modalKembali')">Batal</button>
-            <form method="POST" id="formKembali" action="">
-                @csrf
-                @method('PATCH')
-                <button type="submit" class="btn btn-green">✓ Konfirmasi Kembali</button>
+        <form method="POST" id="formEdit" action="">
+            @csrf @method('PUT')
+            <div class="modal-body">
+                <div class="form-grid">
+                    <div class="field full">
+                        <label>Nama Lengkap</label>
+                        <input type="text" name="nama" id="edit_nama" required>
+                    </div>
+                    <div class="field">
+                        <label>Email</label>
+                        <input type="email" name="email" id="edit_email" required>
+                    </div>
+                    <div class="field">
+                        <label>No. Telepon</label>
+                        <input type="text" name="telepon" id="edit_telepon">
+                    </div>
+                    <div class="field full">
+                        <label>Alamat</label>
+                        <input type="text" name="alamat" id="edit_alamat">
+                    </div>
+                    <div class="field full">
+                        <label>Password Baru</label>
+                        <input type="password" name="password" placeholder="Kosongkan jika tidak ingin ubah">
+                        <p class="field-hint">Biarkan kosong jika tidak ingin mengganti password</p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline" onclick="closeModal('modalEdit')">Batal</button>
+                <button type="submit" class="btn btn-gold">Update Member</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+{{-- ═══ MODAL HAPUS ═══ --}}
+<div class="modal-overlay" id="modalHapus">
+    <div class="modal" style="width:400px">
+        <div class="delete-body">
+            <div class="icon">🗑️</div>
+            <h3>Hapus Member?</h3>
+            <p>Kamu akan menghapus member "<strong id="del-nama" style="color:var(--gold)"></strong>". Data peminjaman terkait juga akan terhapus.</p>
+        </div>
+        <div class="delete-footer">
+            <button class="btn btn-outline" onclick="closeModal('modalHapus')">Batal</button>
+            <form method="POST" id="formHapus" action="">
+                @csrf @method('DELETE')
+                <button type="submit" class="btn btn-danger">Ya, Hapus</button>
             </form>
         </div>
     </div>
@@ -495,22 +466,19 @@
         o.addEventListener('click', e => { if(e.target===o) closeModal(o.id); });
     });
 
-    function openKembali(id, member, buku, hariTerlambat, denda) {
-        document.getElementById('formKembali').action = `/admin/pinjam/${id}/kembalikan`;
-        document.getElementById('ret-member').textContent = member;
-        document.getElementById('ret-buku').textContent    = buku;
+    function openEdit(d) {
+        document.getElementById('formEdit').action = `/admin/member/${d.id}`;
+        document.getElementById('edit_nama').value    = d.nama;
+        document.getElementById('edit_email').value   = d.email;
+        document.getElementById('edit_telepon').value = d.telepon;
+        document.getElementById('edit_alamat').value  = d.alamat;
+        openModal('modalEdit');
+    }
 
-        if (hariTerlambat > 0) {
-            document.getElementById('ret-denda-box').style.display = 'block';
-            document.getElementById('ret-hari').textContent  = hariTerlambat;
-            document.getElementById('ret-denda').textContent = 'Rp ' + denda.toLocaleString('id-ID');
-            document.getElementById('ret-nodenda').textContent = '';
-        } else {
-            document.getElementById('ret-denda-box').style.display = 'none';
-            document.getElementById('ret-nodenda').textContent = '✓ Tidak ada denda';
-        }
-
-        openModal('modalKembali');
+    function openDelete(id, nama) {
+        document.getElementById('formHapus').action = `/admin/member/${id}`;
+        document.getElementById('del-nama').textContent = nama;
+        openModal('modalHapus');
     }
 </script>
 </body>

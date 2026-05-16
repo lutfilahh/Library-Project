@@ -3,7 +3,7 @@
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\BukuController;
 use App\Http\Controllers\PinjamController;
-use App\Http\Controllers\AnggotaController;
+use App\Http\Controllers\MemberController;
 use Illuminate\Support\Facades\Route;
 
 // ── Root ──
@@ -23,7 +23,7 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
 
     // ── Dashboard Buku ──
-    Route::get('/buku/dashboard', [BukuController::class, 'showDashboard'])->name('buku.dashboard');
+    Route::get('/buku/dashboard',       [BukuController::class, 'showDashboard'])->name('buku.dashboard');
     Route::get('/buku/create',     [BukuController::class, 'showCreateBuku'])->name('buku.create');
     Route::post('/buku',           [BukuController::class, 'create'])->name('buku.store');
     Route::get('/buku/{id}/edit',  [BukuController::class, 'showUpdate'])->name('buku.edit');
@@ -37,10 +37,10 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
     Route::delete('/pinjam/{id}',          [PinjamController::class, 'destroy'])->name('pinjam.destroy');
 
     // // ── Anggota ──
-    // Route::get('/anggota',         [AnggotaController::class, 'index'])->name('anggota.index');
-    // Route::post('/anggota',        [AnggotaController::class, 'store'])->name('anggota.store');
-    // Route::put('/anggota/{id}',    [AnggotaController::class, 'update'])->name('anggota.update');
-    // Route::delete('/anggota/{id}', [AnggotaController::class, 'destroy'])->name('anggota.destroy');
+    Route::get('/member',         [MemberController::class, 'index'])->name('member.index');
+    Route::post('/member',        [MemberController::class, 'store'])->name('member.store');
+    Route::put('/member/{id}',    [MemberController::class, 'update'])->name('member.update');
+    Route::delete('/member/{id}', [MemberController::class, 'destroy'])->name('member.destroy');
 });
 
 // ══════════════════════════════════════════════

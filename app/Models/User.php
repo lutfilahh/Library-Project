@@ -36,4 +36,9 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function pinjam()
+{
+    return $this->hasMany(\App\Models\Pinjam::class, 'user_id', 'id');
+}
 }

@@ -146,7 +146,7 @@
             </svg>
             Peminjaman
         </a>
-        <a href="#" class="nav-link">
+        <a href="{{ route('admin.member.index') }}" class="nav-link">
             <svg viewBox="0 0 24 24">
                 <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
                 <circle cx="9" cy="7" r="4"/>

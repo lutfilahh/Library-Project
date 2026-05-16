@@ -26,7 +26,7 @@ class RegisterController extends Controller
             'email'     => 'required|email|unique:users,email',
             'password'  => 'required|min:8|confirmed',
             'terms'     => 'accepted',
-        ]);
+        ]); 
 
         $user = User::create([
             'nama'     => $request->nama,
@@ -36,8 +36,7 @@ class RegisterController extends Controller
             'role'     => 'member',
             'password' => Hash::make($request->password),
         ]);
-
-        // Langsung login setelah registrasi (opsional)
+   
         Auth::login($user);
 
         return redirect()->route('member.dashboard')

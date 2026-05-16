@@ -14,7 +14,6 @@ class Pinjam extends Model
     protected $table='pinjams';
     protected $primaryKey = 'id';
     protected $fillable = [
-        'id',
         'User_id',
         'tgl_pinjam',
         'tgl_kembali',

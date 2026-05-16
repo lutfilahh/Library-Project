@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('tahun');
             $table->string('isbn');
             $table->string('jumlah');
-            $table->foreignIdFor(Kategori::class);
+            $table->string('kategori');
             $table->timestamps();
             $table->softDeletes();
         });

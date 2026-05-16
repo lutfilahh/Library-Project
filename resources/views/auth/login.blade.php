@@ -35,70 +35,12 @@
 
         body {
             font-family: 'Lato', sans-serif;
-            background-color: var(--ink);
+            background: linear-gradient(145deg, #e8e0d3 0%, #d9cebc 100%);
             display: flex;
             align-items: center;
             justify-content: center;
             min-height: 100vh;
-            overflow: hidden;
             position: relative;
-        }
-
-        /* ── Animated bookshelf background ── */
-        .bg-shelves {
-            position: fixed;
-            inset: 0;
-            background:
-                repeating-linear-gradient(
-                    180deg,
-                    transparent 0px,
-                    transparent 110px,
-                    rgba(255,255,255,0.03) 110px,
-                    rgba(255,255,255,0.03) 114px
-                ),
-                linear-gradient(160deg, #0d0b08 0%, #1c1610 50%, #0f0c08 100%);
-            z-index: 0;
-        }
-
-        .books-row {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 200%;
-            display: flex;
-            animation: scrollBooks 40s linear infinite;
-        }
-
-        .book {
-            flex-shrink: 0;
-            border-radius: 2px 4px 4px 2px;
-            margin-right: 4px;
-            opacity: 0.25;
-        }
-
-        @keyframes scrollBooks {
-            0%   { transform: translateX(0); }
-            100% { transform: translateX(-50%); }
-        }
-
-        /* ── Warm glow overlay ── */
-        .glow {
-            position: fixed;
-            width: 600px;
-            height: 600px;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(184,130,26,0.12) 0%, transparent 70%);
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            pointer-events: none;
-            z-index: 1;
-            animation: pulse 6s ease-in-out infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 0.7; transform: translate(-50%,-50%) scale(1); }
-            50%       { opacity: 1;   transform: translate(-50%,-50%) scale(1.1); }
         }
 
         /* ── Main card ── */
@@ -354,15 +296,11 @@
             stroke: var(--amber);
         }
 
-        /* icon after input for focus effect */
-        .input-wrap input:focus ~ svg { stroke: var(--amber); }
-
         .input-icon-right {
             position: absolute;
             right: 13px;
             top: 50%;
             transform: translateY(-50%);
-            pointer-events: auto !important;
             cursor: pointer;
             left: auto !important;
         }
@@ -503,13 +441,6 @@
 </head>
 <body>
 
-<div class="bg-shelves">
-    {{-- Animated book spines row --}}
-    <div class="books-row" id="bookRow"></div>
-</div>
-
-<div class="glow"></div>
-
 <div class="card-wrapper">
 
     {{-- ── Left decorative panel ── --}}
@@ -642,36 +573,17 @@
 </div>
 
 <script>
-    // ── Generate animated book spines ──
-    (function () {
-        const colors = [
-            '#4a2c10','#6b3a1f','#2e1a0a','#7a4a25','#3d2210',
-            '#5c3515','#8a5530','#1e1008','#6b4520','#9a6535',
-            '#3a2010','#7a5028','#2c1808','#5a3818','#8c5a30',
-        ];
-        const widths = [18, 22, 16, 26, 20, 14, 24, 18, 28, 16];
-        const row = document.getElementById('bookRow');
-        const count = 120;
-        let html = '';
-        for (let i = 0; i < count * 2; i++) {
-            const c = colors[i % colors.length];
-            const w = widths[i % widths.length];
-            const h = 80 + Math.floor(Math.random() * 60);
-            html += `<div class="book" style="width:${w}px;height:${h}px;background:${c};align-self:flex-end"></div>`;
-        }
-        row.innerHTML = html;
-    })();
-
     // ── Toggle password visibility ──
     (function () {
-    const toggle = document.getElementById('togglePwd');
-    const pwd    = document.getElementById('password');
-    if (!toggle || !pwd) return;
-    toggle.addEventListener('click', () => {
-        const show = pwd.type === 'password';
-        pwd.type = show ? 'text' : 'password';
-        toggle.style.stroke = show ? 'var(--amber)' : 'var(--muted)';
-    });
+        const toggle = document.getElementById('togglePwd');
+        const pwd    = document.getElementById('password');
+        if (toggle && pwd) {
+            toggle.addEventListener('click', () => {
+                const show = pwd.type === 'password';
+                pwd.type = show ? 'text' : 'password';
+                toggle.style.stroke = show ? 'var(--amber)' : 'var(--muted)';
+            });
+        }
     })();
 </script>
 

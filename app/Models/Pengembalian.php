@@ -14,7 +14,6 @@ class Pengembalian extends Model
     protected $table='pengembalians';
     protected $primaryKey = 'id';
     protected $fillable = [
-        'id',
         'pinjam_id',
         'tgl_kembali',
         'denda',

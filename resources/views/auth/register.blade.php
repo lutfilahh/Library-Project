@@ -28,7 +28,7 @@
 
         body {
             font-family: 'Lato', sans-serif;
-            background-color: var(--ink);
+            background: linear-gradient(145deg, #e8e0d3 0%, #d9cebc 100%);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -36,54 +36,6 @@
             padding: 24px 0;
             position: relative;
             overflow-x: hidden;
-        }
-
-        .bg-shelves {
-            position: fixed;
-            inset: 0;
-            background:
-                repeating-linear-gradient(180deg,
-                    transparent 0px, transparent 110px,
-                    rgba(255,255,255,0.03) 110px, rgba(255,255,255,0.03) 114px),
-                linear-gradient(160deg, #0d0b08 0%, #1c1610 50%, #0f0c08 100%);
-            z-index: 0;
-        }
-
-        .books-row {
-            position: absolute;
-            bottom: 0; left: 0;
-            width: 200%;
-            display: flex;
-            animation: scrollBooks 40s linear infinite;
-        }
-
-        .book {
-            flex-shrink: 0;
-            border-radius: 2px 4px 4px 2px;
-            margin-right: 4px;
-            opacity: 0.2;
-        }
-
-        @keyframes scrollBooks {
-            0%   { transform: translateX(0); }
-            100% { transform: translateX(-50%); }
-        }
-
-        .glow {
-            position: fixed;
-            width: 700px; height: 700px;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(184,130,26,0.1) 0%, transparent 70%);
-            top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
-            pointer-events: none;
-            z-index: 1;
-            animation: pulse 6s ease-in-out infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 0.7; transform: translate(-50%,-50%) scale(1); }
-            50%       { opacity: 1;   transform: translate(-50%,-50%) scale(1.08); }
         }
 
         .card-wrapper {
@@ -482,11 +434,6 @@
 </head>
 <body>
 
-<div class="bg-shelves">
-    <div class="books-row" id="bookRow"></div>
-</div>
-<div class="glow"></div>
-
 <div class="card-wrapper">
     <div class="panel-left">
         <div class="ornament">
@@ -619,25 +566,16 @@
 </div>
 
 <script>
-    (function () {
-        const colors = ['#4a2c10','#6b3a1f','#2e1a0a','#7a4a25','#3d2210','#5c3515','#8a5530','#1e1008','#6b4520','#9a6535'];
-        const widths = [18,22,16,26,20,14,24,18,28,16];
-        const row = document.getElementById('bookRow');
-        let html = '';
-        for (let i = 0; i < 240; i++) {
-            const c = colors[i % colors.length];
-            const w = widths[i % widths.length];
-            const h = 80 + Math.floor(Math.random() * 60);
-            html += `<div class="book" style="width:${w}px;height:${h}px;background:${c};align-self:flex-end"></div>`;
-        }
-        row.innerHTML = html;
-    })();
-
     function togglePass(btnId, inputId) {
-        document.getElementById(btnId).addEventListener('click', () => {
-            const input = document.getElementById(inputId);
-            input.type = input.type === 'password' ? 'text' : 'password';
-        });
+        const btn = document.getElementById(btnId);
+        if (btn) {
+            btn.addEventListener('click', () => {
+                const input = document.getElementById(inputId);
+                if (input) {
+                    input.type = input.type === 'password' ? 'text' : 'password';
+                }
+            });
+        }
     }
     togglePass('togglePwd1', 'password');
     togglePass('togglePwd2', 'password_confirmation');
@@ -652,9 +590,11 @@
         if (/[A-Z]/.test(val) && /[a-z]/.test(val)) score++;
         if (/[0-9]/.test(val)) score++;
         if (/[^A-Za-z0-9]/.test(val)) score++;
-        bars.forEach((b, i) => { b.style.background = i < score ? colors[score-1] : 'var(--border)'; });
-        label.textContent = val.length > 0 ? (labels[score-1] ?? '') : '';
-        label.style.color = score > 0 ? colors[score-1] : 'var(--muted)';
+        bars.forEach((b, i) => { if (b) b.style.background = i < score ? colors[score-1] : 'var(--border)'; });
+        if (label) {
+            label.textContent = val.length > 0 ? (labels[score-1] ?? '') : '';
+            label.style.color = score > 0 ? colors[score-1] : 'var(--muted)';
+        }
     }
 </script>
 </body>

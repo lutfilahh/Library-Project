@@ -1,3 +1,0 @@
-<div>
-   Ini Admin
-</div>

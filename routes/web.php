@@ -49,3 +49,15 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
 Route::middleware('auth')->prefix('member')->name('member.')->group(function () {
     Route::get('/dashboard', fn() => view('member.dashboard'))->name('dashboard');
 });
+
+// Landing
+Route::get('/', function () {
+    return view('auth.landing');
+});
+Route::view('/login', 'auth.login')->name('login');
+Route::view('/register', 'auth.register')->name('register');
+
+//Login
+Route::get('/', function () {
+    return view('auth.landing');
+})->name('landing');

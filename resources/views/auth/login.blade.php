@@ -17,30 +17,31 @@
         }
 
         :root {
-            --cream:      #f5f0e8;
-            --parchment:  #ede5d0;
-            --ink:        #1c1a14;
-            --brown:      #5c3d1e;
-            --amber:      #b8821a;
-            --gold:       #d4a843;
-            --rust:       #8b3a2a;
-            --muted:      #7a6e5c;
-            --border:     #c9b99a;
-            --shadow:     rgba(28, 26, 20, 0.18);
+            --cream:     #f5f0e8;
+            --parchment: #ede5d0;
+            --ink:       #1c1a14;
+            --brown:     #5c3d1e;
+            --amber:     #b8821a;
+            --gold:      #d4a843;
+            --rust:      #8b3a2a;
+            --muted:     #7a6e5c;
+            --border:    #c9b99a;
         }
 
-        html, body {
-            height: 100%;
-        }
+        html, body { height: 100%; }
 
         body {
-            font-family: 'Lato', sans-serif;
-            background: linear-gradient(145deg, #e8e0d3 0%, #d9cebc 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
             min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
             position: relative;
+            font-family: 'Lato', sans-serif;
+            background:
+                linear-gradient(rgba(45,27,20,.65), rgba(45,27,20,.65)),
+                linear-gradient(135deg, #3e2723 0%, #5d4037 45%, #8d6e63 100%);
+            color: #f8f5f0;
         }
 
         /* ── Main card ── */
@@ -59,14 +60,13 @@
 
         @keyframes cardIn {
             from { opacity: 0; transform: translateY(32px) scale(0.97); }
-            to   { opacity: 1; transform: translateY(0)    scale(1); }
+            to   { opacity: 1; transform: translateY(0) scale(1); }
         }
 
         /* ── Left panel ── */
         .panel-left {
             flex: 0 0 46%;
-            background:
-                linear-gradient(175deg, #2a1a0a 0%, #1a0f05 60%, #0d0804 100%);
+            background: linear-gradient(175deg, #2a1a0a 0%, #1a0f05 60%, #0d0804 100%);
             padding: 52px 44px;
             display: flex;
             flex-direction: column;
@@ -84,7 +84,7 @@
             pointer-events: none;
         }
 
-        .ornament-top {
+        .ornament-top, .ornament-bottom {
             display: flex;
             align-items: center;
             gap: 12px;
@@ -94,6 +94,10 @@
             flex: 1;
             height: 1px;
             background: linear-gradient(90deg, transparent, rgba(212,168,67,0.5));
+        }
+
+        .ornament-bottom .ornament-line {
+            background: linear-gradient(90deg, rgba(212,168,67,0.5), transparent);
         }
 
         .ornament-diamond {
@@ -124,7 +128,11 @@
         .logo-icon svg {
             width: 36px;
             height: 36px;
-            fill: var(--ink);
+            fill: none;
+            stroke: var(--ink);
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
         }
 
         .logo-title {
@@ -145,9 +153,7 @@
             margin-top: 6px;
         }
 
-        .panel-quote {
-            text-align: center;
-        }
+        .panel-quote { text-align: center; }
 
         .panel-quote blockquote {
             font-family: 'Playfair Display', serif;
@@ -159,7 +165,6 @@
 
         .panel-quote cite {
             display: block;
-            font-family: 'Lato', sans-serif;
             font-style: normal;
             font-size: 11px;
             letter-spacing: 2px;
@@ -168,17 +173,7 @@
             margin-top: 10px;
         }
 
-        .ornament-bottom {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .ornament-bottom .ornament-line {
-            background: linear-gradient(90deg, rgba(212,168,67,0.5), transparent);
-        }
-
-        /* ── Right panel (form) ── */
+        /* ── Right panel ── */
         .panel-right {
             flex: 1;
             background: var(--cream);
@@ -198,9 +193,25 @@
             pointer-events: none;
         }
 
-        .form-heading {
-            margin-bottom: 32px;
+        /* Back link */
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            color: var(--muted);
+            text-decoration: none;
+            margin-bottom: 28px;
+            transition: color 0.2s;
         }
+        .back-link:hover { color: var(--brown); }
+        .back-link svg {
+            width: 14px; height: 14px;
+            stroke: currentColor; fill: none;
+            stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+        }
+
+        .form-heading { margin-bottom: 28px; }
 
         .form-heading h1 {
             font-family: 'Playfair Display', serif;
@@ -222,7 +233,7 @@
             font-weight: 300;
         }
 
-        /* ── Alert ── */
+        /* Alert */
         .alert {
             background: #fef0ee;
             border-left: 3px solid var(--rust);
@@ -234,12 +245,13 @@
             animation: fadeIn 0.3s ease;
         }
 
-        @keyframes fadeIn { from { opacity:0; transform:translateY(-6px); } to { opacity:1; transform:none; } }
-
-        /* ── Fields ── */
-        .field {
-            margin-bottom: 20px;
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-6px); }
+            to   { opacity: 1; transform: none; }
         }
+
+        /* Fields */
+        .field { margin-bottom: 20px; }
 
         .field label {
             display: block;
@@ -251,19 +263,15 @@
             margin-bottom: 7px;
         }
 
-        .input-wrap {
-            position: relative;
-        }
+        .input-wrap { position: relative; }
 
-        .input-wrap svg {
+        .input-wrap .icon-left {
             position: absolute;
             left: 14px;
             top: 50%;
             transform: translateY(-50%);
-            width: 16px;
-            height: 16px;
-            stroke: var(--muted);
-            fill: none;
+            width: 16px; height: 16px;
+            stroke: var(--muted); fill: none;
             stroke-width: 1.8;
             pointer-events: none;
             transition: stroke 0.2s;
@@ -272,7 +280,7 @@
         .input-wrap input {
             width: 100%;
             height: 46px;
-            padding: 0 14px 0 42px;
+            padding: 0 42px 0 42px; /* kanan 42px untuk icon toggle */
             font-family: 'Lato', sans-serif;
             font-size: 14px;
             color: var(--ink);
@@ -291,19 +299,28 @@
             box-shadow: 0 0 0 3px rgba(184,130,26,0.12);
         }
 
-        .input-wrap input:focus + svg,
-        .input-wrap input:focus ~ svg {
+        .input-wrap input:focus ~ .icon-left {
             stroke: var(--amber);
         }
 
-        .input-icon-right {
+        /* Untuk field email yang tidak punya icon kanan, padding kanan cukup 14px */
+        .input-wrap.no-right input {
+            padding-right: 14px;
+        }
+
+        .icon-toggle {
             position: absolute;
             right: 13px;
             top: 50%;
             transform: translateY(-50%);
             cursor: pointer;
-            left: auto !important;
+            width: 18px; height: 18px;
+            stroke: var(--muted); fill: none;
+            stroke-width: 1.8;
+            transition: stroke 0.2s;
         }
+
+        .icon-toggle:hover { stroke: var(--amber); }
 
         .field-error {
             font-size: 12px;
@@ -311,7 +328,7 @@
             margin-top: 5px;
         }
 
-        /* ── Row for remember + forgot ── */
+        /* Remember + Forgot */
         .row-extras {
             display: flex;
             align-items: center;
@@ -331,8 +348,7 @@
 
         .checkbox-label input[type="checkbox"] {
             appearance: none;
-            width: 16px;
-            height: 16px;
+            width: 16px; height: 16px;
             border: 1.5px solid var(--border);
             border-radius: 2px;
             background: #faf7f1;
@@ -361,13 +377,12 @@
             font-size: 12.5px;
             color: var(--amber);
             text-decoration: none;
-            letter-spacing: 0.3px;
             transition: color 0.2s;
         }
         .forgot-link:hover { color: var(--brown); text-decoration: underline; }
 
-        /* ── Submit button ── */
-        .btn-login {
+        /* Submit button */
+        .btn-submit {
             width: 100%;
             height: 48px;
             background: linear-gradient(135deg, var(--brown) 0%, var(--amber) 100%);
@@ -385,21 +400,21 @@
             transition: box-shadow 0.3s, transform 0.15s;
         }
 
-        .btn-login::before {
+        .btn-submit::before {
             content: '';
             position: absolute;
             inset: 0;
             background: linear-gradient(135deg, transparent 0%, rgba(255,255,255,0.08) 100%);
         }
 
-        .btn-login:hover {
+        .btn-submit:hover {
             box-shadow: 0 6px 20px rgba(92,61,30,0.35);
             transform: translateY(-1px);
         }
 
-        .btn-login:active { transform: translateY(0); }
+        .btn-submit:active { transform: translateY(0); }
 
-        /* ── Divider ── */
+        /* Divider */
         .divider {
             display: flex;
             align-items: center;
@@ -417,7 +432,7 @@
             background: var(--border);
         }
 
-        /* ── Register link ── */
+        /* Register link */
         .register-row {
             text-align: center;
             font-size: 13px;
@@ -431,7 +446,7 @@
         }
         .register-row a:hover { color: var(--amber); }
 
-        /* ── Responsive ── */
+        /* Responsive */
         @media (max-width: 700px) {
             .panel-left { display: none; }
             .card-wrapper { width: 100%; min-height: 100vh; border-radius: 0; }
@@ -453,7 +468,6 @@
 
         <div class="logo-area">
             <div class="logo-icon">
-                {{-- Book icon --}}
                 <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                     <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
                     <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
@@ -472,7 +486,7 @@
 
         <div class="ornament-bottom">
             <div class="ornament-diamond"></div>
-            <div class="ornament-line" style="background: linear-gradient(90deg,rgba(212,168,67,.5),transparent)"></div>
+            <div class="ornament-line"></div>
             <div class="ornament-diamond"></div>
         </div>
     </div>
@@ -480,16 +494,21 @@
     {{-- ── Right form panel ── --}}
     <div class="panel-right">
 
+        {{-- Tombol kembali --}}
+        <a href="{{ route('landing') }}" class="back-link">
+            <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+            Kembali ke beranda
+        </a>
+
         <div class="form-heading">
             <h1>Selamat <em>datang</em></h1>
             <p>Masuk untuk mengakses koleksi buku</p>
         </div>
 
-        {{-- Session error --}}
+        {{-- Session / validation errors --}}
         @if (session('error'))
             <div class="alert">{{ session('error') }}</div>
         @endif
-
         @if ($errors->any())
             <div class="alert">{{ $errors->first() }}</div>
         @endif
@@ -500,7 +519,7 @@
             {{-- Email --}}
             <div class="field">
                 <label for="email">Email</label>
-                <div class="input-wrap">
+                <div class="input-wrap no-right">
                     <input
                         type="email"
                         id="email"
@@ -511,7 +530,7 @@
                         autofocus
                         required
                     >
-                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="pointer-events:none">
+                    <svg class="icon-left" viewBox="0 0 24 24">
                         <rect x="2" y="4" width="20" height="16" rx="2"/>
                         <polyline points="2,4 12,13 22,4"/>
                     </svg>
@@ -521,7 +540,7 @@
                 @enderror
             </div>
 
-            {{-- Password --}}
+            {{-- Password — hanya SATU field --}}
             <div class="field">
                 <label for="password">Kata Sandi</label>
                 <div class="input-wrap">
@@ -533,12 +552,12 @@
                         autocomplete="current-password"
                         required
                     >
-                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="pointer-events:none">
+                    <svg class="icon-left" viewBox="0 0 24 24">
                         <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
                         <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
                     </svg>
-                    {{-- Toggle password visibility --}}
-                    <svg class="input-icon-right" id="togglePwd" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" title="Tampilkan sandi">
+                    {{-- Toggle show/hide password --}}
+                    <svg class="icon-toggle" id="togglePwd" viewBox="0 0 24 24" title="Tampilkan sandi">
                         <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
                         <circle cx="12" cy="12" r="3"/>
                     </svg>
@@ -559,7 +578,7 @@
                 @endif
             </div>
 
-            <button type="submit" class="btn-login">Masuk ke Perpustakaan</button>
+            <button type="submit" class="btn-submit">Masuk ke Perpustakaan</button>
         </form>
 
         @if (Route::has('register'))
@@ -572,18 +591,18 @@
     </div>
 </div>
 
+{{-- Satu script toggle password --}}
 <script>
-    // ── Toggle password visibility ──
     (function () {
         const toggle = document.getElementById('togglePwd');
         const pwd    = document.getElementById('password');
-        if (toggle && pwd) {
-            toggle.addEventListener('click', () => {
-                const show = pwd.type === 'password';
-                pwd.type = show ? 'text' : 'password';
-                toggle.style.stroke = show ? 'var(--amber)' : 'var(--muted)';
-            });
-        }
+        if (!toggle || !pwd) return;
+
+        toggle.addEventListener('click', () => {
+            const isHidden = pwd.type === 'password';
+            pwd.type = isHidden ? 'text' : 'password';
+            toggle.style.stroke = isHidden ? 'var(--amber)' : 'var(--muted)';
+        });
     })();
 </script>
 

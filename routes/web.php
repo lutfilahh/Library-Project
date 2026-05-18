@@ -35,6 +35,8 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
     Route::post('/pinjam',                 [PinjamController::class, 'store'])->name('pinjam.store');
     Route::patch('/pinjam/{id}/kembalikan',[PinjamController::class, 'kembalikan'])->name('pinjam.kembalikan');
     Route::delete('/pinjam/{id}',          [PinjamController::class, 'destroy'])->name('pinjam.destroy');
+    Route::patch('/pinjam/{id}/approve', [PinjamController::class, 'approve'])->name('admin.pinjam.approve');
+    Route::patch('/pinjam/{id}/reject', [PinjamController::class, 'reject'])->name('admin.pinjam.reject');
 
     // // ── Anggota ──
     Route::get('/anggota',         [AnggotaController::class, 'index'])->name('anggota.index');

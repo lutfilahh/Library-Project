@@ -18,6 +18,7 @@ class Pinjam extends Model
         'tgl_pinjam',
         'tgl_kembali',
         'buku_id',
+        'status',
     ];
 
     public function user():BelongsTo

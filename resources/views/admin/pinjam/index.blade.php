@@ -335,10 +335,14 @@
                         <td>
                             @if($p->status === 'kembali')
                                 <span class="pill pill-done">Kembali</span>
-                            @elseif($terlambat)
+                            @elseif($p->status === 'pending')
+                                <span class="pill pill-warn">Menunggu</span>
+                            @elseif($p->status === 'ditolak')
+                                <span class="pill pill-danger">Ditolak</span>
+                            @elseif($p->status === 'pinjam' && $terlambat)
                                 <span class="pill pill-danger">Terlambat</span>
-                            @else
-                                <span class="pill pill-ok">Aktif</span>
+                            @elseif($p->status === 'pinjam')
+                                <span class="pill pill-ok">Dipinjam</span>
                             @endif
                         </td>
                         <td style="font-size:12px">
@@ -361,18 +365,29 @@
                         <td>
                             <div class="actions">
                                 @if($p->status === 'pinjam')
-                                <button class="btn btn-green btn-sm" onclick="openKembali({{ json_encode($p->id) }}, {{ json_encode($p->user->nama ?? '') }}, {{ json_encode($p->buku->judul ?? '') }}, {{ $terlambat ? $hariTerlambat : 0 }}, {{ $denda }})">
-                                    <svg viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.08"/></svg>
-                                    Kembalikan
-                                </button>
-                                @else
-                                <span style="font-size:11px;color:var(--text-dim)">
-                                    {{ $p->pengembalian ? \Carbon\Carbon::parse($p->pengembalian->tgl_kembali)->format('d M Y') : '-' }}
-                                </span>
+                                    <button class="btn btn-green btn-sm" onclick="openKembali({{ json_encode($p->id) }}, {{ json_encode($p->user->nama ?? '') }}, {{ json_encode($p->buku->judul ?? '') }}, {{ $terlambat ? $hariTerlambat : 0 }}, {{ $denda }})">
+                                        <svg viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.08"/></svg>
+                                        Kembalikan
+                                    </button>
+                                @elseif($p->status === 'pending')
+                                    <form method="POST" action="{{ route('admin.pinjam.approve', $p->id) }}" style="display:inline-block">
+                                        @csrf @method('PATCH')
+                                        <button type="submit" class="btn btn-gold btn-sm" onclick="return confirm('Setujui peminjaman ini?')">✓ Setujui</button>
+                                    </form>
+                                    <form method="POST" action="{{ route('admin.pinjam.reject', $p->id) }}" style="display:inline-block">
+                                        @csrf @method('PATCH')
+                                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Tolak peminjaman ini?')">✗ Tolak</button>
+                                    </form>
+                                @elseif($p->status === 'kembali')
+                                    <span style="font-size:11px;color:var(--text-dim)">
+                                        {{ $p->pengembalian ? \Carbon\Carbon::parse($p->pengembalian->tgl_kembali)->format('d M Y') : '-' }}
+                                    </span>
+                                @elseif($p->status === 'ditolak')
+                                    <span style="font-size:11px;color:var(--text-dim)">Ditolak</span>
                                 @endif
 
-                                <form method="POST" action="{{ route('admin.pinjam.destroy', $p->id) }}"
-                                      onsubmit="return confirm('Hapus data peminjaman ini?')">
+                                <!-- Tombol hapus (tetap ada untuk semua status, opsional) -->
+                                <form method="POST" action="{{ route('admin.pinjam.destroy', $p->id) }}" onsubmit="return confirm('Hapus data peminjaman ini?')">
                                     @csrf @method('DELETE')
                                     <button type="submit" class="btn btn-danger btn-sm">
                                         <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M9 6V4h6v2"/></svg>

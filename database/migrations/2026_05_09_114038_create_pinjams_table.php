@@ -19,7 +19,7 @@ return new class extends Migration
             $table->foreignIdFor(User::class);
             $table->date('tgl_pinjam');
             $table->date('tgl_kembali');
-            $table->enum('status',['pinjam','kembali']);
+            $table->enum('status',['pinjam','kembali','ditolak','pending'])->default('pinjam');
             $table->foreignIdFor(Buku::class);
             $table->timestamps();
             $table->softDeletes();

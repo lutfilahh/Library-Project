@@ -17,7 +17,12 @@ class Buku extends Model
         'penerbit',
         'tahun',
         'isbn',
-        'jumlah',
         'kategori',
+        'status',
     ];
+
+    public function pinjam()
+    {
+        return $this->hasMany(Pinjam::class, 'buku_id', 'id');
+    }
 }

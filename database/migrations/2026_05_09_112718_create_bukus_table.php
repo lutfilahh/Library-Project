@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('penerbit');
             $table->string('tahun');
             $table->string('isbn');
-            $table->string('jumlah');
+            $table->enum('status', ['tersedia', 'dipinjam'])->default('tersedia');
             $table->string('kategori');
             $table->timestamps();
             $table->softDeletes();

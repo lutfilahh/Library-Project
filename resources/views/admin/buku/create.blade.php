@@ -60,7 +60,7 @@
         </div>
     </div>
     <nav class="nav">
-        <a href="{{ route('admin.dashboard') }}" class="nav-link">Dashboard</a>
+        <a href="{{ route('admin.buku.dashboard') }}" class="nav-link">Dashboard</a>
         <a href="#" class="nav-link active">Kelola Buku</a>
     </nav>
 </aside>
@@ -130,19 +130,10 @@
                     </div>
                     @enderror
                 </div>
-                <div class="form-group">
-                    <label>Jumlah Eksemplar</label>
-                    <input type="number" name="jumlah" value="{{ old('jumlah') }}" required> 
-                    @error('jumlah')
-                    <div class="error">
-                        {{ $message }}
-                    </div>
-                    @enderror
-                </div>
 
                 <div class="btn-group">
                     <button type="submit" class="btn btn-primary">Simpan Buku</button>
-                    <a href="{{ route('admin.dashboard') }}" class="btn btn-secondary">Batal</a>
+                    <a href="{{ route('admin.buku.dashboard') }}" class="btn btn-secondary">Batal</a>
                 </div>
                 
             </form>

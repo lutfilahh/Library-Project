@@ -38,7 +38,7 @@ class User extends Authenticatable
     }
 
     public function pinjam()
-{
-    return $this->hasMany(\App\Models\Pinjam::class, 'user_id', 'id');
-}
+    {
+        return $this->hasMany(\App\Models\Pinjam::class, 'user_id', 'id');
+    }
 }

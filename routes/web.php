@@ -3,7 +3,7 @@
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\BukuController;
 use App\Http\Controllers\PinjamController;
-use App\Http\Controllers\MemberController;
+use App\Http\Controllers\AnggotaController;
 use Illuminate\Support\Facades\Route;
 
 // ── Root ──
@@ -37,10 +37,10 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
     Route::delete('/pinjam/{id}',          [PinjamController::class, 'destroy'])->name('pinjam.destroy');
 
     // // ── Anggota ──
-    Route::get('/member',         [MemberController::class, 'index'])->name('member.index');
-    Route::post('/member',        [MemberController::class, 'store'])->name('member.store');
-    Route::put('/member/{id}',    [MemberController::class, 'update'])->name('member.update');
-    Route::delete('/member/{id}', [MemberController::class, 'destroy'])->name('member.destroy');
+    Route::get('/anggota',         [AnggotaController::class, 'index'])->name('anggota.index');
+    Route::post('/anggota',        [AnggotaController::class, 'store'])->name('anggota.store');
+    Route::put('/anggota/{id}',    [AnggotaController::class, 'update'])->name('anggota.update');
+    Route::delete('/anggota/{id}', [AnggotaController::class, 'destroy'])->name('anggota.destroy');
 });
 
 // ══════════════════════════════════════════════
@@ -49,3 +49,15 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
 Route::middleware('auth')->prefix('member')->name('member.')->group(function () {
     Route::get('/dashboard', fn() => view('member.dashboard'))->name('dashboard');
 });
+
+// Landing
+Route::get('/', function () {
+    return view('auth.landing');
+});
+Route::view('/login', 'auth.login')->name('login');
+Route::view('/register', 'auth.register')->name('register');
+
+//Login
+Route::get('/', function () {
+    return view('auth.landing');
+})->name('landing');

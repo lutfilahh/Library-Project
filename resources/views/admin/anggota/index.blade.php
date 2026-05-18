@@ -171,9 +171,9 @@
             <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
             Peminjaman
         </a>
-        <a href="{{ route('admin.member.index') }}" class="nav-link active">
+        <a href="{{ route('admin.anggota.index') }}" class="nav-link active">
             <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
-            Member
+            Anggota
         </a>
     </nav>
     <div class="logout-section">
@@ -191,12 +191,12 @@
 <div class="main">
     <header class="topbar">
         <div class="page-heading">
-            <h1>Data Member</h1>
-            <p>Kelola member perpustakaan</p>
+            <h1>Data Anggota</h1>
+            <p>Kelola anggota perpustakaan</p>
         </div>
         <button class="btn btn-gold" onclick="openModal('modalTambah')">
             <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-            Tambah Member
+            Tambah Anggota
         </button>
     </header>
 
@@ -247,7 +247,7 @@
         </div>
 
         {{-- Toolbar --}}
-        <form method="GET" action="{{ route('admin.member.index') }}">
+        <form method="GET" action="{{ route('admin.anggota.index') }}">
             <div class="toolbar">
                 <div class="search-box">
                     <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
@@ -255,7 +255,7 @@
                 </div>
                 <button type="submit" class="btn btn-outline">Cari</button>
                 @if(request('search'))
-                <a href="{{ route('admin.member.index') }}" class="btn btn-outline">Reset</a>
+                <a href="{{ route('admin.anggota.index') }}" class="btn btn-outline">Reset</a>
                 @endif
             </div>
         </form>
@@ -263,14 +263,14 @@
         {{-- Table --}}
         <div class="card">
             <div class="card-head">
-                <h3>Daftar Member</h3>
+                <h3>Daftar Anggota</h3>
                 <span>{{ $member->firstItem() }}–{{ $member->lastItem() }} dari {{ $member->total() }}</span>
             </div>
             <table>
                 <thead>
                     <tr>
                         <th>No</th>
-                        <th>Member</th>
+                        <th>Anggota</th>
                         <th>Telepon</th>
                         <th>Alamat</th>
                         <th>Status Pinjam</th>
@@ -348,7 +348,7 @@
             <h2>Tambah Member Baru</h2>
             <button class="modal-close" onclick="closeModal('modalTambah')">×</button>
         </div>
-        <form method="POST" action="{{ route('admin.member.store') }}">
+        <form method="POST" action="{{ route('admin.anggota.store') }}">
             @csrf
             <div class="modal-body">
                 <div class="form-grid">

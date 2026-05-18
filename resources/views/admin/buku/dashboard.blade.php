@@ -6,6 +6,7 @@
     <title>Dashboard Buku — Admin Perpustakaan</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
     <style>
+        /* (semua style sama seperti yang Anda berikan, tidak perlu diubah) */
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         :root {
             --bg:       #0f0d09;
@@ -71,14 +72,15 @@
         .stat-icon { width:36px; height:36px; border-radius:8px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
         .stat-icon svg { width:18px; height:18px; fill:none; stroke-width:1.8; }
         .si-gold  { background:rgba(212,168,67,0.1); } .si-gold  svg { stroke:var(--gold);  }
-        .si-green { background:rgba(169, 60, 60, 0.12); } .si-green svg { stroke:#52b788; }
+        .si-green { background:rgba(45,106,79,0.12); } .si-green svg { stroke:#52b788; }
         .si-rust  { background:rgba(139,58,42,0.12); } .si-rust  svg { stroke:#f4a49a; }
         .stat-info .num { font-family:'Playfair Display',serif; font-size:26px; font-weight:700; color:var(--cream); line-height:1; }
-       
         .stat-info .lbl { font-size:11px; color:var(--text-dim); margin-top:3px; }
+        
         .alert { padding:11px 16px; border-radius:6px; margin-bottom:18px; font-size:13px; display:flex; align-items:center; gap:10px; animation:slideDown 0.3s ease; }
         @keyframes slideDown { from{opacity:0;transform:translateY(-8px)} to{opacity:1;transform:none} }
         .alert-success { background:rgba(45,106,79,0.15); border:1px solid rgba(45,106,79,0.3); color:#52b788; }
+        .alert-error   { background:rgba(139,58,42,0.15); border:1px solid rgba(139,58,42,0.3); color:#f4a49a; }
         
         .toolbar { display:flex; align-items:center; gap:10px; margin-bottom:16px; flex-wrap:wrap; }
         .search-box { display:flex; align-items:center; background:var(--surface2); border:1px solid var(--border); border-radius:6px; padding:0 12px; gap:8px; height:38px; flex:1; min-width:180px; transition:border-color 0.2s; }
@@ -146,12 +148,12 @@
             </svg>
             Peminjaman
         </a>
-        <a href="{{ route('admin.member.index') }}" class="nav-link">
+        <a href="{{ route('admin.anggota.index') }}" class="nav-link">
             <svg viewBox="0 0 24 24">
                 <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
                 <circle cx="9" cy="7" r="4"/>
             </svg>
-            Member
+            Anggota
         </a>
     </nav>
     <div class="logout-section">
@@ -181,24 +183,26 @@
     </header>
     
     <div class="content">
-        @if(session('success')) <div class="alert alert-success">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <polyline points="20 6 9 17 4 12"/>
-            </svg> 
-            {{ session('success') }} 
-        </div> 
+        @if(session('success')) 
+            <div class="alert alert-success">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="20 6 9 17 4 12"/>
+                </svg> 
+                {{ session('success') }} 
+            </div> 
         @endif
         @if(session('error')) 
-        <div class="alert alert-error">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <circle cx="12" cy="12" r="10"/>
-                <line x1="12" y1="8" x2="12" y2="12"/>
-                <line x1="12" y1="16" x2="12.01" y2="16"/>
-            </svg> 
-            {{ session('error') }} 
-        </div> 
+            <div class="alert alert-error">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <line x1="12" y1="8" x2="12" y2="12"/>
+                    <line x1="12" y1="16" x2="12.01" y2="16"/>
+                </svg> 
+                {{ session('error') }} 
+            </div> 
         @endif
 
+        {{--  total koleksi --}}
         <div class="stat-strip">
             <div class="stat-box">
                 <div class="stat-icon si-gold">
@@ -208,44 +212,8 @@
                     </svg>
                 </div>
                 <div class="stat-info">
-                    <div class="num">
-                        {{ $totalBukuAll }}
-                    </div>
-                    <div class="lbl">
-                        Total Koleksi
-                    </div>
-                </div>
-            </div>
-            <div class="stat-box">
-                <div class="stat-icon si-green">
-                    <svg viewBox="0 0 24 24">
-                        <polyline points="20 6 9 17 4 12"/>
-                    </svg>
-                </div>
-                <div class="stat-info">
-                    <div class="num">
-                        {{ $totalEksemplarAll }}
-                    </div>
-                    <div class="lbl">
-                        Total Buku Tersedia
-                    </div>
-                </div>
-            </div>
-            <div class="stat-box">
-                <div class="stat-icon si-rust">
-                    <svg viewBox="0 0 24 24">
-                        <line x1="18" y1="20" x2="18" y2="10"/>
-                        <line x1="12" y1="20" x2="12" y2="4"/>
-                        <line x1="6" y1="20" x2="6" y2="14"/>
-                    </svg>
-                </div>
-                <div class="stat-info">
-                    <div class="num">
-                        {{ $buku->currentPage() }}/{{ $buku->lastPage() }}
-                    </div>
-                    <div class="lbl">
-                        Halaman
-                    </div>
+                    <div class="num">{{ $totalBukuAll }}</div>
+                    <div class="lbl">Total Koleksi Buku</div>
                 </div>
             </div>
         </div>
@@ -261,7 +229,7 @@
                 </div>
                 <button type="submit" class="btn btn-outline">Cari</button>
                 @if(request('search')) 
-                <a href="{{ route('admin.buku.dashboard') }}" class="btn btn-outline">Reset</a> 
+                    <a href="{{ route('admin.buku.dashboard') }}" class="btn btn-outline">Reset</a> 
                 @endif
             </form>
         </div>
@@ -274,53 +242,33 @@
             <table>
                 <thead>
                     <tr>
-                        <th>
-                            No
-                        </th>
-                        <th>
-                            Judul Buku
-                        </th>
-                        <th>
-                            Penulis
-                        </th>
-                        <th>
-                            Penerbit
-                        </th>
-                        <th>
-                            Tahun
-                        </th>
-                        <th>
-                            ISBN
-                        </th>
-                        <th>
-                            Kategori
-                        </th>
-                        <th>
-                            Jumlah
-                        </th>
-                        <th>
-                            Aksi
-                        </th>
+                        <th>No</th>
+                        <th>Judul Buku</th>
+                        <th>Penulis</th>
+                        <th>Penerbit</th>
+                        <th>Tahun</th>
+                        <th>ISBN</th>
+                        <th>Kategori</th>
+                        <th>Status</th>      {{-- kolom status ditambahkan --}}
+                        <th>Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
                     @forelse($buku as $i => $b)
                     <tr>
                         <td style="color:var(--text-dim);width:40px">{{ ($buku->currentPage() - 1) * $buku->perPage() + $i + 1 }}</td>
-                        <td>
-                            <div class="cell-title">
-                                {{ $b->judul }}
-                            </div>
-                        </td>
+                        <td><div class="cell-title">{{ $b->judul }}</div></td>
                         <td>{{ $b->penulis }}</td>
                         <td style="font-size:12px;color:var(--text-dim)">{{ $b->penerbit }}</td>
                         <td>{{ $b->tahun }}</td>
                         <td style="font-size:11.5px;color:var(--text-dim)">{{ $b->isbn }}</td>
                         <td style="font-size:12px;color:var(--text-dim)">{{ $b->kategori }}</td>
                         <td>
-                            <span class="pill {{ $b->jumlah > 5 ? 'pill-ok' : ($b->jumlah > 0 ? 'pill-warn' : 'pill-danger') }}">
-                                {{ $b->jumlah }}
-                            </span>
+                            @if($b->status == 'tersedia')
+                                <span class="pill pill-ok">Tersedia</span>
+                            @else
+                                <span class="pill pill-danger">Dipinjam</span>
+                            @endif
                         </td>
                         <td>
                             <div class="actions">
@@ -349,7 +297,7 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="8" class="no-row">
+                        <td colspan="9" class="no-row">
                             📚 Belum ada buku. 
                             <a href="{{ route('admin.buku.create') }}" style="color:var(--amber)">
                                 Tambahkan sekarang
@@ -360,9 +308,7 @@
                 </tbody>
             </table>
             <div class="pagi-wrap">
-                <p>
-                    Menampilkan {{ $buku->firstItem() ?? 0 }}–{{ $buku->lastItem() ?? 0 }} dari {{ $buku->total() }} data
-                </p>
+                <p>Menampilkan {{ $buku->firstItem() ?? 0 }}–{{ $buku->lastItem() ?? 0 }} dari {{ $buku->total() }} data</p>
                 {{ $buku->appends(['search' => request('search')])->links() }}
             </div>
         </div>

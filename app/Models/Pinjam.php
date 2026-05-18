@@ -14,10 +14,10 @@ class Pinjam extends Model
     protected $table='pinjams';
     protected $primaryKey = 'id';
     protected $fillable = [
-        'User_id',
+        'user_id',
         'tgl_pinjam',
         'tgl_kembali',
-        'Buku_id',
+        'buku_id',
     ];
 
     public function user():BelongsTo
@@ -28,5 +28,10 @@ class Pinjam extends Model
     public function buku():BelongsTo
     {
         return $this->belongsTo(Buku::class);
+    }
+
+    public function pengembalian()
+    {
+        return $this->hasOne(Pengembalian::class, 'pinjam_id');
     }
 }

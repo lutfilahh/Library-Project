@@ -6,6 +6,7 @@
     <title>Peminjaman — Admin Perpustakaan</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
     <style>
+        /* (CSS sama seperti sebelumnya, tidak perlu diubah) */
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         :root {
             --bg:       #0f0d09;
@@ -178,9 +179,9 @@
             <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
             Peminjaman
         </a>
-        <a href="{{ route('admin.member.index') }}" class="nav-link">
+        <a href="{{ route('admin.anggota.index') }}" class="nav-link">
             <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
-            Member
+            Anggota
         </a>
     </nav>
     <div class="logout-section">
@@ -199,7 +200,7 @@
     <header class="topbar">
         <div class="page-heading">
             <h1>Data Peminjaman</h1>
-            <p>Catat dan kelola peminjaman buku member</p>
+            <p>Catat dan kelola peminjaman buku anggota</p>
         </div>
         <button class="btn btn-gold" onclick="openModal('modalTambah')">
             <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
@@ -268,7 +269,7 @@
             <div class="toolbar">
                 <div class="search-box">
                     <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari nama member atau judul buku...">
+                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari nama anggota atau judul buku...">
                 </div>
                 <select name="status" class="filter-select" onchange="this.form.submit()">
                     <option value="">Semua Status</option>
@@ -292,7 +293,7 @@
                 <thead>
                     <tr>
                         <th>No</th>
-                        <th>Member</th>
+                        <th>Anggota</th>
                         <th>Judul Buku</th>
                         <th>Tgl Pinjam</th>
                         <th>Batas Kembali</th>
@@ -360,7 +361,7 @@
                         <td>
                             <div class="actions">
                                 @if($p->status === 'pinjam')
-                                <button class="btn btn-green btn-sm"onclick="openKembali({{ json_encode($p->id) }}, {{ json_encode($p->user->nama ?? '') }}, {{ json_encode($p->buku->judul ?? '') }}, {{ $terlambat ? $hariTerlambat : 0 }}, {{ $denda }})">
+                                <button class="btn btn-green btn-sm" onclick="openKembali({{ json_encode($p->id) }}, {{ json_encode($p->user->nama ?? '') }}, {{ json_encode($p->buku->judul ?? '') }}, {{ $terlambat ? $hariTerlambat : 0 }}, {{ $denda }})">
                                     <svg viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.08"/></svg>
                                     Kembalikan
                                 </button>
@@ -397,7 +398,7 @@
     </div>
 </div>
 
-{{-- ═══ MODAL CATAT PINJAM ═══ --}}
+{{-- ═══ MODAL CATAT PINJAM (sudah disesuaikan tanpa 'jumlah') ═══ --}}
 <div class="modal-overlay" id="modalTambah">
     <div class="modal">
         <div class="modal-header">
@@ -409,9 +410,9 @@
             <div class="modal-body">
                 <div class="form-grid">
                     <div class="field full">
-                        <label>Member</label>
+                        <label>Anggota</label>
                         <select name="user_id" required>
-                            <option value="">-- Pilih Member --</option>
+                            <option value="">-- Pilih Anggota --</option>
                             @foreach($members as $m)
                             <option value="{{ $m->id }}" {{ old('user_id')==$m->id ? 'selected':'' }}>
                                 {{ $m->nama }} — {{ $m->email }}
@@ -426,11 +427,15 @@
                             <option value="">-- Pilih Buku --</option>
                             @foreach($buku as $b)
                             <option value="{{ $b->id }}" {{ old('buku_id')==$b->id ? 'selected':'' }}>
-                                {{ $b->judul }} (tersedia: {{ $b->jumlah }})
+                                {{ $b->judul }}
+                                @if($b->status == 'tersedia')
+                                    <span style="color:#52b788;"> (tersedia)</span>
+                                @endif
                             </option>
                             @endforeach
                         </select>
                         @error('buku_id')<p class="field-error">{{ $message }}</p>@enderror
+                        <p class="field-hint">Hanya buku yang tersedia saat ini yang dapat dipinjam.</p>
                     </div>
                     <div class="field">
                         <label>Tanggal Pinjam</label>
@@ -460,7 +465,7 @@
             <div class="confirm-icon">📖</div>
             <h3>Konfirmasi Pengembalian</h3>
             <p>
-                <strong id="ret-member" style="color:var(--gold)"></strong><br>
+                <strong id="ret-anggota" style="color:var(--gold)"></strong><br>
                 mengembalikan buku <strong id="ret-buku" style="color:var(--cream)"></strong>
             </p>
             <div class="denda-info" id="ret-denda-box" style="display:none">
@@ -495,9 +500,9 @@
         o.addEventListener('click', e => { if(e.target===o) closeModal(o.id); });
     });
 
-    function openKembali(id, member, buku, hariTerlambat, denda) {
+    function openKembali(id, anggota, buku, hariTerlambat, denda) {
         document.getElementById('formKembali').action = `/admin/pinjam/${id}/kembalikan`;
-        document.getElementById('ret-member').textContent = member;
+        document.getElementById('ret-anggota').textContent = anggota;
         document.getElementById('ret-buku').textContent    = buku;
 
         if (hariTerlambat > 0) {

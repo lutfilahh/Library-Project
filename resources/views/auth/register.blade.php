@@ -444,7 +444,7 @@
 
             <div class="bottom-section">
                 <label class="checkbox-row">
-                    <input type="checkbox" required>
+                    <input type="checkbox" name="terms" required>
                     <span>Saya menyetujui syarat dan ketentuan yang berlaku</span>
                 </label>
 

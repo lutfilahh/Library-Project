@@ -23,7 +23,7 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
 
     // ── Dashboard Buku ──
-    Route::get('/buku/dashboard',       [BukuController::class, 'showDashboard'])->name('buku.dashboard');
+    Route::get('/buku/dashboard',  [BukuController::class, 'showDashboard'])->name('buku.dashboard');
     Route::get('/buku/create',     [BukuController::class, 'showCreateBuku'])->name('buku.create');
     Route::post('/buku',           [BukuController::class, 'create'])->name('buku.store');
     Route::get('/buku/{id}/edit',  [BukuController::class, 'showUpdate'])->name('buku.edit');
@@ -51,13 +51,9 @@ Route::middleware('auth')->prefix('member')->name('member.')->group(function () 
 });
 
 // Landing
-Route::get('/', function () {
-    return view('auth.landing');
-});
-Route::view('/login', 'auth.login')->name('login');
-Route::view('/register', 'auth.register')->name('register');
-
-//Login
-Route::get('/', function () {
+Route::get('/', function () 
+{
     return view('auth.landing');
 })->name('landing');
+
+Route::view('/register', 'auth.register')->name('register');

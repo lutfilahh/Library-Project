@@ -4,10 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Buku;
+use App\Models\Pinjam;
 
 class BukuController extends Controller
 {
-    // Dashboard daftar buku + pencarian
+    // Dashboard daftar buku +
     public function showDashboard(Request $request)
     {
         $search = $request->input('search');
@@ -20,9 +21,8 @@ class BukuController extends Controller
         })->latest()->paginate(10)->appends(['search' => $search]);
         
         $totalBukuAll = Buku::count();
-        $totalEksemplarAll = Buku::sum('jumlah');
         
-        return view('admin.buku.dashboard', compact('buku', 'totalBukuAll', 'totalEksemplarAll'));
+        return view('admin.buku.dashboard', compact('buku', 'totalBukuAll'));
     }
 
     // Tampilkan form tambah buku
@@ -31,7 +31,7 @@ class BukuController extends Controller
         return view('admin.buku.create');
     }
 
-    // Proses simpan buku
+    // Proses simpan buku 
     public function create(Request $request)
     {
         $request->validate([
@@ -41,12 +41,19 @@ class BukuController extends Controller
             'tahun'    => 'required|digits:4|integer|min:1900|max:' . date('Y'),
             'isbn'     => 'required|string|max:100',
             'kategori' => 'required|string|max:100',
-            'jumlah'   => 'required|integer|max:100',
         ]);
 
-        Buku::create($request->only(['judul', 'penulis', 'penerbit', 'tahun', 'isbn', 'kategori', 'jumlah']));
+        Buku::create([
+            'judul'    => $request->judul,
+            'penulis'  => $request->penulis,
+            'penerbit' => $request->penerbit,
+            'tahun'    => $request->tahun,
+            'isbn'     => $request->isbn,
+            'kategori' => $request->kategori,
+            'status'   => 'tersedia', 
+        ]);
 
-        return redirect()->route('admin.dashboard')->with('success', 'Buku berhasil ditambahkan!');
+        return redirect()->route('admin.buku.dashboard')->with('success', 'Buku berhasil ditambahkan!');
     }
 
     // Tampilkan form edit
@@ -56,7 +63,7 @@ class BukuController extends Controller
         return view('admin.buku.update', compact('buku'));
     }
 
-    // Proses update buku
+    // Proses update buku 
     public function update(Request $request, $id)
     {
         $buku = Buku::findOrFail($id);
@@ -68,20 +75,35 @@ class BukuController extends Controller
             'tahun'    => 'required|digits:4|integer|min:1900|max:' . date('Y'),
             'isbn'     => 'required|string|max:100',
             'kategori' => 'required|string|max:100',
-            'jumlah'   => 'required|integer|max:100',
         ]);
 
-        $buku->update($request->only(['judul', 'penulis', 'penerbit', 'tahun', 'isbn', 'kategori', 'jumlah', ]));
+        $buku->update($request->only(['judul', 'penulis', 'penerbit', 'tahun', 'isbn', 'kategori']));
 
-        return redirect()->route('admin.dashboard')->with('success', 'Data buku berhasil diperbarui');
+        $this->updateStatusBuku($buku->id);
+
+        return redirect()->route('admin.buku.dashboard')->with('success', 'Data buku berhasil diperbarui');
     }
 
-    // Hapus buku
+    // Hapus buku 
     public function destroy($id)
     {
         $buku = Buku::findOrFail($id);
         $buku->delete();
 
         return redirect()->route('admin.buku.dashboard')->with('success', 'Buku berhasil dihapus!');
+    }
+
+    // Helper untuk update status buku berdasarkan peminjaman aktif
+    private function updateStatusBuku($bukuId)
+    {
+        $buku = Buku::find($bukuId);
+        if (!$buku) return;
+
+        $sedangDipinjam = Pinjam::where('buku_id', $bukuId)
+                                ->where('status', 'pinjam')
+                                ->exists();
+
+        $buku->status = $sedangDipinjam ? 'dipinjam' : 'tersedia';
+        $buku->save();
     }
 }

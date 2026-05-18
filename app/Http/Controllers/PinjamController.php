@@ -13,6 +13,19 @@ class PinjamController extends Controller
 {
     const DENDA_PER_HARI = 2000;
  
+    // Helper untuk update status buku
+    private function updateStatusBuku($bukuId)
+    {
+        $buku = Buku::find($bukuId);
+        if (!$buku) return;
+        
+        $sedangDipinjam = Pinjam::where('buku_id', $bukuId)
+                                ->where('status', 'pinjam')
+                                ->exists();
+        $buku->status = $sedangDipinjam ? 'dipinjam' : 'tersedia';
+        $buku->save();
+    }
+ 
     public function index(Request $request): View
     {
         $query = Pinjam::with(['user', 'buku', 'pengembalian'])->latest();
@@ -37,7 +50,6 @@ class PinjamController extends Controller
                                  ->where('tgl_kembali', '<', now()->toDateString())
                                  ->count();
  
-        // Data untuk modal tambah
         $members = User::where('role', 'member')->orderBy('nama')->get();
         $buku    = Buku::orderBy('judul')->get();
  
@@ -51,28 +63,34 @@ class PinjamController extends Controller
     {
         $data = $request->validate([
             'user_id'     => 'required|exists:users,id',
-            'buku_id'     => 'required|exists:buku,id',
+            'buku_id'     => 'required|exists:bukus,id',
             'tgl_pinjam'  => 'required|date',
             'tgl_kembali' => 'required|date|after:tgl_pinjam',
         ]);
  
-        // Cek stok buku
         $buku = Buku::findOrFail($data['buku_id']);
-        $dipinjam = Pinjam::where('buku_id', $buku->id)->where('status', 'pinjam')->count();
-        if ($dipinjam >= $buku->jumlah) {
-            return back()->with('error', 'Stok buku habis / semua sedang dipinjam.')->withInput();
+        
+        // Cek apakah buku sedang dipinjam (status = 'pinjam') oleh siapapun
+        $sedangDipinjam = Pinjam::where('buku_id', $buku->id)
+                                ->where('status', 'pinjam')
+                                ->exists();
+        if ($sedangDipinjam) {
+            return back()->with('error', 'Buku sedang dipinjam, tidak tersedia.')->withInput();
         }
  
-        // Cek member sudah pinjam buku yang sama
+        // Cek apakah member yang sama sudah meminjam buku ini (belum dikembalikan)
         $sudahPinjam = Pinjam::where('user_id', $data['user_id'])
                              ->where('buku_id', $data['buku_id'])
-                             ->where('status', 'pinjam')->exists();
- 
+                             ->where('status', 'pinjam')
+                             ->exists();
         if ($sudahPinjam) {
-            return back()->with('error', 'Member ini sudah meminjam buku tersebut.')->withInput();
+            return back()->with('error', 'Member ini sudah meminjam buku tersebut dan belum mengembalikan.')->withInput();
         }
  
-        Pinjam::create(array_merge($data, ['status' => 'pinjam']));
+        $pinjam = Pinjam::create(array_merge($data, ['status' => 'pinjam']));
+        
+        // Update status buku menjadi 'dipinjam'
+        $this->updateStatusBuku($buku->id);
  
         return back()->with('success', 'Peminjaman berhasil dicatat.');
     }
@@ -98,6 +116,9 @@ class PinjamController extends Controller
         ]);
  
         $pinjam->update(['status' => 'kembali']);
+        
+        // Update status buku menjadi 'tersedia' (karena tidak ada peminjaman aktif lagi)
+        $this->updateStatusBuku($pinjam->buku_id);
  
         $pesan = $denda > 0
             ? 'Pengembalian berhasil. Denda: Rp ' . number_format($denda, 0, ',', '.')
@@ -114,9 +135,48 @@ class PinjamController extends Controller
             return back()->with('error', 'Tidak bisa hapus peminjaman yang masih aktif.');
         }
  
+        $bukuId = $pinjam->buku_id;
         $pinjam->pengembalian()->delete();
         $pinjam->delete();
  
+        // Setelah menghapus data peminjaman (status sudah 'kembali'), update status buku
+        $this->updateStatusBuku($bukuId);
+ 
         return back()->with('success', 'Data peminjaman berhasil dihapus.');
+    }
+ 
+    public function approve($id): RedirectResponse
+    {
+        $pinjam = Pinjam::findOrFail($id);
+ 
+        if ($pinjam->status !== 'pending') {
+            return back()->with('error', 'Hanya peminjaman berstatus pending yang bisa disetujui.');
+        }
+ 
+        // Cek apakah buku masih tersedia (tidak ada peminjaman aktif)
+        $buku = $pinjam->buku;
+        $sedangDipinjam = Pinjam::where('buku_id', $buku->id)
+                                ->where('status', 'pinjam')
+                                ->exists();
+        if ($sedangDipinjam) {
+            return back()->with('error', 'Buku sudah dipinjam oleh orang lain, tidak bisa disetujui.');
+        }
+ 
+        $pinjam->update(['status' => 'pinjam']);
+        $this->updateStatusBuku($buku->id);
+        return back()->with('success', "Peminjaman {$pinjam->user->nama} disetujui.");
+    }
+ 
+    public function reject($id): RedirectResponse
+    {
+        $pinjam = Pinjam::findOrFail($id);
+ 
+        if ($pinjam->status !== 'pending') {
+            return back()->with('error', 'Hanya peminjaman berstatus pending yang bisa ditolak.');
+        }
+ 
+        $pinjam->update(['status' => 'ditolak']);
+        // Status buku tidak berubah karena belum benar-benar dipinjam
+        return back()->with('success', "Peminjaman {$pinjam->user->nama} ditolak.");
     }
 }
